@@ -14,7 +14,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ u
           trigger={
             <Button size="lg" className="gap-2">
               <PlusIcon className="w-4 h-4" />
-              Add New User
+              Add User
             </Button>
           }
         />

@@ -8,10 +8,18 @@ import UserActions from './user-actions'
 
 export default function SearchInput() {
   const [selectedUser, setSelectedUser] = React.useState<User | null>(null)
-
   const handleSearch = React.useCallback(async (value: string) => {
+    if (!value?.trim()) {
+      return []
+    }
+    
     try {
       const users = await searchUsers(value)
+      if (!users || !Array.isArray(users)) {
+        console.error('Invalid response format:', users)
+        return []
+      }
+      
       return users.map(user => ({
         ...user,
         name: user.name ?? "",
