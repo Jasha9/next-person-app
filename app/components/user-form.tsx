@@ -32,7 +32,7 @@ export function UserForm({ form }: FormComponentProps) {
       reader.onloadend = () => {
         const base64String = reader.result as string
         setPreviewUrl(base64String)
-        form.setValue('picture', base64String)
+        form.setValue('profilePicture', base64String)
       }
       reader.readAsDataURL(file)
     }
@@ -43,7 +43,7 @@ export function UserForm({ form }: FormComponentProps) {
       <div className="grid gap-4 py-2">
         <FormField
           control={form.control}
-          name="picture"
+          name="profilePicture"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Profile Picture</FormLabel>

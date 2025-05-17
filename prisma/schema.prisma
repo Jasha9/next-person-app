@@ -46,6 +46,7 @@ model User {
   name          String?
   email         String?   @unique
   phoneNumber   String?
+  profilePicture String?  // ← store Base64 or an external URL
   accounts      Account[]
   sessions      Session[]
 }
