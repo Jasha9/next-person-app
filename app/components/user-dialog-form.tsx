@@ -1,15 +1,22 @@
 'use client'
 
-import { useState } from 'react'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { UserForm } from './user-form'
-import { UserFormData, userFormSchema } from '../actions/schemas'
-import { addUser, updateUser } from '../actions/actions'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
-import { User } from '../actions/schemas'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { addUser, updateUser } from '../actions/actions'
+import { User, UserFormData, userFormSchema } from '../actions/schemas'
+import { UserForm } from './user-form'
 
 interface UserDialogFormProps {
   mode: 'create' | 'edit'
@@ -18,54 +25,64 @@ interface UserDialogFormProps {
   onSuccess?: (user: User) => void
 }
 
-export function UserDialogForm({ mode, user, trigger, onSuccess }: UserDialogFormProps) {
+export function UserDialogForm({
+  mode,
+  user,
+  trigger,
+  onSuccess,
+}: UserDialogFormProps) {
   const [open, setOpen] = useState(false)
   const { toast } = useToast()
 
   const form = useForm<UserFormData>({
     resolver: zodResolver(userFormSchema),
-    defaultValues: mode === 'edit' && user ? {
-      name: user.name,
-      email: user.email,
-      phoneNumber: user.phoneNumber,
-    } : {
-      name: '',
-      email: '',
-      phoneNumber: '',
-    },
+    defaultValues:
+      mode === 'edit' && user
+        ? {
+            name: user.name,
+            email: user.email,
+            phoneNumber: user.phoneNumber,
+          }
+        : {
+            name: '',
+            email: '',
+            phoneNumber: '',
+          },
   })
 
   const onSubmit = async (data: UserFormData) => {
     try {
-      const result = mode === 'create' 
-        ? await addUser(data)
-        : await updateUser(user!.id, data)
+      const result =
+        mode === 'create'
+          ? await addUser(data)
+          : await updateUser(user!.id, data)
 
       if (!result.success) {
         toast({
-          variant: "destructive",
-          title: "Error",
+          variant: 'destructive',
+          title: 'Error',
           description: result.error || 'Something went wrong',
         })
         return
       }
 
       toast({
-        title: "Success",
+        title: 'Success',
         description: `User ${mode === 'create' ? 'created' : 'updated'} successfully`,
       })
-      
+
       setOpen(false)
       form.reset()
-      
+
       if (result.data && onSuccess) {
         onSuccess(result.data)
       }
     } catch (error) {
       toast({
-        variant: "destructive",
-        title: "Error",
-        description: error instanceof Error ? error.message : 'Something went wrong',
+        variant: 'destructive',
+        title: 'Error',
+        description:
+          error instanceof Error ? error.message : 'Something went wrong',
       })
     }
   }
@@ -79,12 +96,14 @@ export function UserDialogForm({ mode, user, trigger, onSuccess }: UserDialogFor
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] h-auto max-h-[85vh] flex flex-col">
+      <DialogContent className="flex h-auto max-h-[85vh] flex-col sm:max-w-[425px]">
         <DialogHeader className="flex-shrink-0">
-          <DialogTitle>{mode === 'create' ? 'Create User' : 'Edit User'}</DialogTitle>
+          <DialogTitle>
+            {mode === 'create' ? 'Create User' : 'Edit User'}
+          </DialogTitle>
           <DialogDescription>
-            {mode === 'create' 
-              ? 'Add a new user to the system.' 
+            {mode === 'create'
+              ? 'Add a new user to the system.'
               : 'Edit user information.'}
           </DialogDescription>
         </DialogHeader>
@@ -92,17 +111,14 @@ export function UserDialogForm({ mode, user, trigger, onSuccess }: UserDialogFor
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <UserForm form={form} />
             <DialogFooter className="sticky bottom-0 bg-background pt-4">
-              <Button 
-                type="button" 
-                variant="outline" 
+              <Button
+                type="button"
+                variant="outline"
                 onClick={() => setOpen(false)}
               >
                 Cancel
               </Button>
-              <Button
-                type="submit"
-                disabled={form.formState.isSubmitting}
-              >
+              <Button type="submit" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting
                   ? 'Saving...'
                   : mode === 'create'

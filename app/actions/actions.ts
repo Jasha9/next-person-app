@@ -3,20 +3,20 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { cache } from 'react'
 import { prisma } from '../../lib/prisma'
 import { User, userSchema } from './schemas'
-import { cache } from 'react'
 
 export const searchUsers = cache(async (query: string) => {
   try {
     // Handle empty query case
     if (!query) {
-      return [];
+      return []
     }
-    
+
     // Ensure prisma client is initialized
     if (!prisma) {
-      throw new Error('Database client not initialized');
+      throw new Error('Database client not initialized')
     }
 
     const users = await prisma.user.findMany({
@@ -28,8 +28,9 @@ export const searchUsers = cache(async (query: string) => {
         ],
       },
       take: 10, // Limit results to 10
-      orderBy: { // Order by relevance
-        name: 'asc'
+      orderBy: {
+        // Order by relevance
+        name: 'asc',
       },
       // Return limited fields to reduce payload size
       select: {
@@ -38,30 +39,32 @@ export const searchUsers = cache(async (query: string) => {
         email: true,
         phoneNumber: true,
       },
-    });
+    })
 
-    return users.map(user => ({
+    return users.map((user) => ({
       ...user,
       name: user.name ?? '',
       email: user.email ?? '',
       phoneNumber: user.phoneNumber ?? '',
-    }));
+    }))
   } catch (error) {
-    console.error('Search error:', error);
-    return [];
+    console.error('Search error:', error)
+    return []
   }
-});
+})
 
-export async function addUser(data: Omit<User, 'id'>): Promise<{ success: boolean; data?: User; error?: string }> {
+export async function addUser(
+  data: Omit<User, 'id'>
+): Promise<{ success: boolean; data?: User; error?: string }> {
   try {
     // Validate data with schema
     const validatedUser = userSchema.parse({ ...data, id: crypto.randomUUID() })
-    
+
     // Check if email already exists
     const existingUser = await prisma.user.findUnique({
       where: { email: validatedUser.email },
     })
-    
+
     if (existingUser) {
       return { success: false, error: 'Email already exists' }
     }
@@ -79,54 +82,53 @@ export async function addUser(data: Omit<User, 'id'>): Promise<{ success: boolea
         phoneNumber: true,
       },
     })
-    
+
     revalidatePath('/')
-    return { 
-      success: true, 
+    return {
+      success: true,
       data: {
         ...user,
         name: user.name ?? '',
         email: user.email ?? '',
         phoneNumber: user.phoneNumber ?? '',
-      }
+      },
     }
   } catch (error) {
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Failed to create user' 
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to create user',
     }
   }
 }
 
-export async function deleteUser(id: string): Promise<{ success: boolean; error?: string }> {
+export async function deleteUser(
+  id: string
+): Promise<{ success: boolean; error?: string }> {
   try {
     await prisma.user.delete({ where: { id } })
     revalidatePath('/')
     return { success: true }
   } catch (error) {
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Failed to delete user' 
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to delete user',
     }
   }
 }
 
 export async function updateUser(
-  id: string, 
+  id: string,
   data: Partial<Omit<User, 'id'>>
 ): Promise<{ success: boolean; data?: User; error?: string }> {
   try {
     // If email is being updated, check if it already exists
     if (data.email) {
       const existingUser = await prisma.user.findFirst({
-        where: { 
-          AND: [
-            { email: data.email },
-            { id: { not: id } }
-          ]
-        }
+        where: {
+          AND: [{ email: data.email }, { id: { not: id } }],
+        },
       })
-      
+
       if (existingUser) {
         return { success: false, error: 'Email already exists' }
       }
@@ -137,7 +139,9 @@ export async function updateUser(
       ...(data.name && { name: { set: data.name } }),
       ...(data.email && { email: { set: data.email } }),
       ...(data.phoneNumber && { phoneNumber: { set: data.phoneNumber } }),
-      ...(data.profilePicture && { profilePicture: { set: data.profilePicture } })
+      ...(data.profilePicture && {
+        profilePicture: { set: data.profilePicture },
+      }),
     }
 
     const user = await prisma.user.update({
@@ -151,22 +155,22 @@ export async function updateUser(
         profilePicture: true,
       },
     })
-    
+
     revalidatePath('/')
-    return { 
-      success: true, 
+    return {
+      success: true,
       data: {
         ...user,
         name: user.name ?? '',
         email: user.email ?? '',
         phoneNumber: user.phoneNumber ?? '',
         profilePicture: user.profilePicture ?? null,
-      }
+      },
     }
   } catch (error) {
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Failed to update user' 
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to update user',
     }
   }
 }
@@ -179,6 +183,38 @@ export const getUserById = cache(async (id: string) => {
     ...user,
     name: user.name ?? '',
     email: user.email ?? '',
-    phoneNumber: user.phoneNumber ?? ''
+    phoneNumber: user.phoneNumber ?? '',
   }
 })
+
+export const getUsers = cache(async (page: number, limit: number) => {
+  try {
+    const users = await prisma.user.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: { name: 'asc' },
+    })
+
+    const totalUsers = await prisma.user.count()
+
+    return {
+      data: users,
+      total: totalUsers,
+    }
+  } catch (error) {
+    console.error('Error fetching users:', error)
+    return {
+      data: [],
+      total: 0,
+    }
+  }
+})
+
+export const deleteMultipleUsers = async (ids: string[]) => {
+  try {
+    await prisma.user.deleteMany({ where: { id: { in: ids } } })
+    revalidatePath('/')
+  } catch (error) {
+    console.error('Error deleting users:', error)
+  }
+}
