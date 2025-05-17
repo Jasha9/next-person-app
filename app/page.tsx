@@ -14,14 +14,14 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ u
           trigger={
             <Button size="lg" className="gap-2">
               <PlusIcon className="w-4 h-4" />
-              Add New User
+              Add User
             </Button>
           }
         />
       </div>
       <div className="grid gap-8">
         <div className="bg-card rounded-lg border p-6">
-          <h2 className="text-lg font-semibold mb-4">Search Users</h2>
+          <h2 className="text-lg font-semibold mb-4">Search Person</h2>
           <UserSearch searchParams={searchParams} />
         </div>
         <TechnicalOverview />

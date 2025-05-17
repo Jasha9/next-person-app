@@ -8,34 +8,45 @@ import { User, userSchema } from './schemas'
 import { cache } from 'react'
 
 export const searchUsers = cache(async (query: string) => {
-  // Handle empty query case
-  if (!query) {
-    return []
-  }
-  const users = await prisma.user.findMany({
-    where: {
-      OR: [
-        { name: { contains: query, mode: 'insensitive' } },
-        { email: { contains: query, mode: 'insensitive' } },
-        { phoneNumber: { contains: query, mode: 'insensitive' } },
-      ],
-    },
-    // Return limited fields to reduce payload size
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      phoneNumber: true,
-    },
-  })
+  try {
+    // Handle empty query case
+    if (!query) {
+      return [];
+    }
+    
+    // Ensure prisma client is initialized
+    if (!prisma) {
+      throw new Error('Database client not initialized');
+    }
 
-  return users.map(user => ({
-    ...user,
-    name: user.name ?? '',
-    email: user.email ?? '',
-    phoneNumber: user.phoneNumber ?? ''
-  }))
-})
+    const users = await prisma.user.findMany({
+      where: {
+        OR: [
+          { name: { contains: query, mode: 'insensitive' } },
+          { email: { contains: query, mode: 'insensitive' } },
+          { phoneNumber: { contains: query, mode: 'insensitive' } },
+        ],
+      },
+      // Return limited fields to reduce payload size
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phoneNumber: true,
+      },
+    });
+
+    return users.map(user => ({
+      ...user,
+      name: user.name ?? '',
+      email: user.email ?? '',
+      phoneNumber: user.phoneNumber ?? '',
+    }));
+  } catch (error) {
+    console.error('Search error:', error);
+    return [];
+  }
+});
 
 export async function addUser(data: Omit<User, 'id'>): Promise<{ success: boolean; data?: User; error?: string }> {
   try {
