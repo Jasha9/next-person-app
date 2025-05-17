@@ -27,6 +27,10 @@ export const searchUsers = cache(async (query: string) => {
           { phoneNumber: { contains: query, mode: 'insensitive' } },
         ],
       },
+      take: 10, // Limit results to 10
+      orderBy: { // Order by relevance
+        name: 'asc'
+      },
       // Return limited fields to reduce payload size
       select: {
         id: true,
@@ -133,7 +137,7 @@ export async function updateUser(
       ...(data.name && { name: { set: data.name } }),
       ...(data.email && { email: { set: data.email } }),
       ...(data.phoneNumber && { phoneNumber: { set: data.phoneNumber } }),
-      ...(data.picture && { profilePicture: { set: data.picture } })
+      ...(data.profilePicture && { profilePicture: { set: data.profilePicture } })
     }
 
     const user = await prisma.user.update({
@@ -156,7 +160,7 @@ export async function updateUser(
         name: user.name ?? '',
         email: user.email ?? '',
         phoneNumber: user.phoneNumber ?? '',
-        picture: user.profilePicture ?? null,
+        profilePicture: user.profilePicture ?? null,
       }
     }
   } catch (error) {

@@ -4,7 +4,7 @@ export function TechnicalOverview() {
   return (
     <Card className="mt-12">
       <CardHeader>
-        <CardTitle>How it works</CardTitle>
+        <CardTitle>Working of Search App</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-muted-foreground">

@@ -51,7 +51,10 @@ export function UserForm({ form }: FormComponentProps) {
                 <div className="flex flex-col items-center gap-4">
                   <Avatar className="h-24 w-24">
                     {(previewUrl || field.value) && (
-                      <AvatarImage src={previewUrl || field.value} alt="Preview" />
+                      <AvatarImage 
+                        src={previewUrl || field.value || undefined} 
+                        alt="Preview" 
+                      />
                     )}
                     <AvatarFallback>Add</AvatarFallback>
                   </Avatar>
@@ -72,6 +75,7 @@ export function UserForm({ form }: FormComponentProps) {
               <FormDescription>
                 Upload a profile picture (optional)
               </FormDescription>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -97,7 +101,7 @@ export function UserForm({ form }: FormComponentProps) {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="example@email.com" {...field} />
+                <Input placeholder="john.smith@example.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -114,7 +118,7 @@ export function UserForm({ form }: FormComponentProps) {
                 <Input placeholder="0422018632" {...field} />
               </FormControl>
               <FormDescription>
-                Must be a valid Australian mobile number (e.g., 0422018632)
+                Australian mobile number (e.g., 0422018632)
               </FormDescription>
               <FormMessage />
             </FormItem>
