@@ -21,7 +21,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ u
       </div>
       <div className="grid gap-8">
         <div className="bg-card rounded-lg border p-6">
-          <h2 className="text-lg font-semibold mb-4">Search Users</h2>
+          <h2 className="text-lg font-semibold mb-4">Search Person</h2>
           <UserSearch searchParams={searchParams} />
         </div>
         <TechnicalOverview />
