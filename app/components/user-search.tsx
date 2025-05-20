@@ -5,8 +5,12 @@ import { getUserById } from '@/app/actions/actions';
 import ClientOnly from './client-only';
 import { UserSearchWrapper } from './user-search-wrapper';
 
-export default async function UserSearch({ searchParams }: { searchParams: { userId?: string } }) {
-  const selectedUserId = searchParams?.userId || null;
+type SearchParams = {
+  userId?: string | string[] | undefined;
+};
+
+export default async function UserSearch({ searchParams }: { searchParams: SearchParams }) {
+  const selectedUserId = typeof searchParams?.userId === 'string' ? searchParams.userId : null;
 
   // Fetch the user based on the selectedUserId
   const user = selectedUserId ? await getUserById(selectedUserId) : null;

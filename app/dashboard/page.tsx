@@ -6,11 +6,11 @@ import { Plus as PlusIcon } from 'lucide-react';
 import { auth } from "../auth"
 import { redirect } from "next/navigation"
 
-export default async function DashboardPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined }
-}) {
+type Props = {
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export default async function DashboardPage({ searchParams }: Props) {
   const session = await auth()
   const userId = searchParams.userId as string | undefined
   
