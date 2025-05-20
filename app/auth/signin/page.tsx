@@ -8,7 +8,11 @@ export const metadata: Metadata = {
   description: "Sign in to your account",
 };
 
-export default async function SignInPage() {
+type Props = {
+  searchParams?: { callbackUrl?: string }
+}
+
+export default async function SignInPage({ searchParams }: Props) {
   const session = await auth();
   if (session?.user) {
     redirect("/dashboard");

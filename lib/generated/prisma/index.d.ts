@@ -3424,7 +3424,6 @@ export namespace Prisma {
     name: string | null
     email: string | null
     phoneNumber: string | null
-    profilePicture: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -3432,7 +3431,6 @@ export namespace Prisma {
     name: string | null
     email: string | null
     phoneNumber: string | null
-    profilePicture: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -3440,7 +3438,6 @@ export namespace Prisma {
     name: number
     email: number
     phoneNumber: number
-    profilePicture: number
     _all: number
   }
 
@@ -3450,7 +3447,6 @@ export namespace Prisma {
     name?: true
     email?: true
     phoneNumber?: true
-    profilePicture?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -3458,7 +3454,6 @@ export namespace Prisma {
     name?: true
     email?: true
     phoneNumber?: true
-    profilePicture?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -3466,7 +3461,6 @@ export namespace Prisma {
     name?: true
     email?: true
     phoneNumber?: true
-    profilePicture?: true
     _all?: true
   }
 
@@ -3547,7 +3541,6 @@ export namespace Prisma {
     name: string | null
     email: string | null
     phoneNumber: string | null
-    profilePicture: string | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -3572,7 +3565,6 @@ export namespace Prisma {
     name?: boolean
     email?: boolean
     phoneNumber?: boolean
-    profilePicture?: boolean
     accounts?: boolean | User$accountsArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -3583,7 +3575,6 @@ export namespace Prisma {
     name?: boolean
     email?: boolean
     phoneNumber?: boolean
-    profilePicture?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3591,7 +3582,6 @@ export namespace Prisma {
     name?: boolean
     email?: boolean
     phoneNumber?: boolean
-    profilePicture?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -3599,10 +3589,9 @@ export namespace Prisma {
     name?: boolean
     email?: boolean
     phoneNumber?: boolean
-    profilePicture?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "phoneNumber" | "profilePicture", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "phoneNumber", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
@@ -3622,7 +3611,6 @@ export namespace Prisma {
       name: string | null
       email: string | null
       phoneNumber: string | null
-      profilePicture: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -4052,7 +4040,6 @@ export namespace Prisma {
     readonly name: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
     readonly phoneNumber: FieldRef<"User", 'String'>
-    readonly profilePicture: FieldRef<"User", 'String'>
   }
     
 
@@ -5522,8 +5509,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     email: 'email',
-    phoneNumber: 'phoneNumber',
-    profilePicture: 'profilePicture'
+    phoneNumber: 'phoneNumber'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -5777,7 +5763,6 @@ export namespace Prisma {
     name?: StringNullableFilter<"User"> | string | null
     email?: StringNullableFilter<"User"> | string | null
     phoneNumber?: StringNullableFilter<"User"> | string | null
-    profilePicture?: StringNullableFilter<"User"> | string | null
     accounts?: AccountListRelationFilter
     sessions?: SessionListRelationFilter
   }
@@ -5787,7 +5772,6 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     phoneNumber?: SortOrderInput | SortOrder
-    profilePicture?: SortOrderInput | SortOrder
     accounts?: AccountOrderByRelationAggregateInput
     sessions?: SessionOrderByRelationAggregateInput
   }
@@ -5800,7 +5784,6 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     name?: StringNullableFilter<"User"> | string | null
     phoneNumber?: StringNullableFilter<"User"> | string | null
-    profilePicture?: StringNullableFilter<"User"> | string | null
     accounts?: AccountListRelationFilter
     sessions?: SessionListRelationFilter
   }, "id" | "email">
@@ -5810,7 +5793,6 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     phoneNumber?: SortOrderInput | SortOrder
-    profilePicture?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -5824,7 +5806,6 @@ export namespace Prisma {
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
     email?: StringNullableWithAggregatesFilter<"User"> | string | null
     phoneNumber?: StringNullableWithAggregatesFilter<"User"> | string | null
-    profilePicture?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
 
   export type VerificationTokenWhereInput = {
@@ -6027,7 +6008,6 @@ export namespace Prisma {
     name?: string | null
     email?: string | null
     phoneNumber?: string | null
-    profilePicture?: string | null
     accounts?: AccountCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
   }
@@ -6037,7 +6017,6 @@ export namespace Prisma {
     name?: string | null
     email?: string | null
     phoneNumber?: string | null
-    profilePicture?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
   }
@@ -6047,7 +6026,6 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
   }
@@ -6057,7 +6035,6 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -6067,7 +6044,6 @@ export namespace Prisma {
     name?: string | null
     email?: string | null
     phoneNumber?: string | null
-    profilePicture?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -6075,7 +6051,6 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -6083,7 +6058,6 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type VerificationTokenCreateInput = {
@@ -6360,7 +6334,6 @@ export namespace Prisma {
     name?: SortOrder
     email?: SortOrder
     phoneNumber?: SortOrder
-    profilePicture?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -6368,7 +6341,6 @@ export namespace Prisma {
     name?: SortOrder
     email?: SortOrder
     phoneNumber?: SortOrder
-    profilePicture?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -6376,7 +6348,6 @@ export namespace Prisma {
     name?: SortOrder
     email?: SortOrder
     phoneNumber?: SortOrder
-    profilePicture?: SortOrder
   }
 
   export type VerificationTokenIdentifierTokenCompoundUniqueInput = {
@@ -6675,7 +6646,6 @@ export namespace Prisma {
     name?: string | null
     email?: string | null
     phoneNumber?: string | null
-    profilePicture?: string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
   }
 
@@ -6684,7 +6654,6 @@ export namespace Prisma {
     name?: string | null
     email?: string | null
     phoneNumber?: string | null
-    profilePicture?: string | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -6709,7 +6678,6 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
   }
 
@@ -6718,7 +6686,6 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -6727,7 +6694,6 @@ export namespace Prisma {
     name?: string | null
     email?: string | null
     phoneNumber?: string | null
-    profilePicture?: string | null
     accounts?: AccountCreateNestedManyWithoutUserInput
   }
 
@@ -6736,7 +6702,6 @@ export namespace Prisma {
     name?: string | null
     email?: string | null
     phoneNumber?: string | null
-    profilePicture?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -6761,7 +6726,6 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUpdateManyWithoutUserNestedInput
   }
 
@@ -6770,7 +6734,6 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
   }
 

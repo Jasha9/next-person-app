@@ -35,13 +35,12 @@ model Session {
 }
 
 model User {
-  id             String    @id @default(cuid())
-  name           String?
-  email          String?   @unique
-  phoneNumber    String?
-  profilePicture String? // ← store Base64 or an external URL
-  accounts       Account[]
-  sessions       Session[]
+  id          String    @id @default(cuid())
+  name        String?
+  email       String?   @unique
+  phoneNumber String?
+  accounts    Account[]
+  sessions    Session[]
 }
 
 model VerificationToken {
