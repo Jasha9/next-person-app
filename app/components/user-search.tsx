@@ -5,9 +5,9 @@ import { getUserById } from '@/app/actions/actions';
 import ClientOnly from './client-only';
 import { UserSearchWrapper } from './user-search-wrapper';
 
-type SearchParams = {
+interface SearchParams {
   userId?: string | string[] | undefined;
-};
+}
 
 export default async function UserSearch({ searchParams }: { searchParams: SearchParams }) {
   const selectedUserId = typeof searchParams?.userId === 'string' ? searchParams.userId : null;
