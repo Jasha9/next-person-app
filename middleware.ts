@@ -1,6 +1,7 @@
-import { auth } from "@/app/auth"
+import NextAuth from "next-auth";
+import { authConfig } from "./app/auth.config";
 
-export default auth
+export default NextAuth(authConfig).auth;
 
 export const config = {
   matcher: [
@@ -13,4 +14,4 @@ export const config = {
      */
     "/((?!api/auth|_next/static|_next/image|favicon.ico).*)",
   ],
-}
+};

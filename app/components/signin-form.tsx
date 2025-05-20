@@ -1,22 +1,36 @@
-import { Metadata } from "next";
+'use client';
+
+import { useEffect, useState } from "react";
 import { getProviders, signIn } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { auth } from "@/app/auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-export const metadata: Metadata = {
-  title: "Sign In - Person Search App",
-  description: "Sign in to your account",
-};
+interface Provider {
+  id: string;
+  name: string;
+  type: string;
+  signinUrl: string;
+  callbackUrl: string;
+}
 
-export default async function SignInPage() {
-  const session = await auth();
-  if (session?.user) {
-    redirect("/");
+export function SignInForm() {
+  const [providers, setProviders] = useState<Record<string, Provider> | null>(null);
+
+  useEffect(() => {
+    const fetchProviders = async () => {
+      const providers = await getProviders();
+      setProviders(providers);
+    };
+    fetchProviders();
+  }, []);
+
+  if (!providers) {
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100vh-12rem)]">
+        <p>Loading...</p>
+      </div>
+    );
   }
-
-  const providers = await getProviders();
 
   return (
     <div className="container flex items-center justify-center min-h-[calc(100vh-12rem)]">
@@ -28,7 +42,7 @@ export default async function SignInPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-          {providers && Object.values(providers).map((provider) => (
+          {Object.values(providers).map((provider: Provider) => (
             <div key={provider.id}>
               <Button
                 variant="outline"
