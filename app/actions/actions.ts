@@ -31,21 +31,21 @@ export const searchUsers = cache(async (query: string) => {
       orderBy: {
         // Order by relevance
         name: 'asc',
-      },
-      // Return limited fields to reduce payload size
+      },      // Return limited fields to reduce payload size
       select: {
         id: true,
         name: true,
         email: true,
         phoneNumber: true,
+        profilePicture: true,
       },
     })
-
     return users.map((user) => ({
       ...user,
       name: user.name ?? '',
       email: user.email ?? '',
       phoneNumber: user.phoneNumber ?? '',
+      profilePicture: user.profilePicture ?? null,
     }))
   } catch (error) {
     console.error('Search error:', error)
@@ -69,21 +69,19 @@ export async function addUser(
       return { success: false, error: 'Email already exists' }
     }
 
-    const user = await prisma.user.create({
-      data: {
+    const user = await prisma.user.create({      data: {
         name: validatedUser.name,
         email: validatedUser.email,
         phoneNumber: validatedUser.phoneNumber,
-      },
-      select: {
+        profilePicture: validatedUser.profilePicture,
+      },select: {
         id: true,
         name: true,
         email: true,
         phoneNumber: true,
+        profilePicture: true,
       },
     })
-
-    revalidatePath('/')
     return {
       success: true,
       data: {
@@ -91,6 +89,7 @@ export async function addUser(
         name: user.name ?? '',
         email: user.email ?? '',
         phoneNumber: user.phoneNumber ?? '',
+        profilePicture: user.profilePicture ?? null,
       },
     }
   } catch (error) {
@@ -176,7 +175,16 @@ export async function updateUser(
 }
 
 export const getUserById = cache(async (id: string) => {
-  const user = await prisma.user.findUnique({ where: { id } })
+  const user = await prisma.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      phoneNumber: true,
+      profilePicture: true,
+    },
+  })
   if (!user) return null
 
   return {
@@ -184,6 +192,7 @@ export const getUserById = cache(async (id: string) => {
     name: user.name ?? '',
     email: user.email ?? '',
     phoneNumber: user.phoneNumber ?? '',
+    profilePicture: user.profilePicture ?? null,
   }
 })
 

@@ -8,18 +8,23 @@ export const metadata: Metadata = {
   description: "Sign in to your account",
 };
 
-type Props = {
-  searchParams?: { callbackUrl?: string }
-}
-
-export default async function SignInPage({ searchParams }: Props) {
+export default async function SignInPage({
+  searchParams = {},
+}: {
+  searchParams?: Record<string, string>;
+}) {
   const session = await auth();
   if (session?.user) {
     redirect("/dashboard");
   }
+  
+  const callbackUrl = typeof searchParams?.callbackUrl === 'string' 
+    ? searchParams.callbackUrl 
+    : undefined;
+
   return (
     <div className="container flex items-center justify-center min-h-[calc(100vh-12rem)]">
-      <SignInForm callbackUrl={searchParams?.callbackUrl} />
+      <SignInForm callbackUrl={callbackUrl} />
     </div>
   );
 }
