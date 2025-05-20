@@ -17,10 +17,9 @@ export default async function SignInPage({ searchParams }: Props) {
   if (session?.user) {
     redirect("/dashboard");
   }
-
   return (
     <div className="container flex items-center justify-center min-h-[calc(100vh-12rem)]">
-      <SignInForm />
+      <SignInForm callbackUrl={searchParams?.callbackUrl} />
     </div>
   );
 }

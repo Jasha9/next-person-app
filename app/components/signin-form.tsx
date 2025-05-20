@@ -13,7 +13,11 @@ interface Provider {
   callbackUrl: string;
 }
 
-export function SignInForm() {
+interface SignInFormProps {
+  callbackUrl?: string;
+}
+
+export function SignInForm({ callbackUrl }: SignInFormProps) {
   const [providers, setProviders] = useState<Record<string, Provider> | null>(null);
 
   useEffect(() => {
@@ -43,11 +47,10 @@ export function SignInForm() {
         </CardHeader>
         <CardContent className="grid gap-4">
           {Object.values(providers).map((provider: Provider) => (
-            <div key={provider.id}>
-              <Button
+            <div key={provider.id}>              <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => signIn(provider.id)}
+                onClick={() => signIn(provider.id, { callbackUrl: callbackUrl || '/dashboard' })}
               >
                 {provider.id === 'google' && (
                   <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
