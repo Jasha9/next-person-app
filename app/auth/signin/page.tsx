@@ -14,5 +14,9 @@ export default async function SignInPage() {
     redirect("/dashboard");
   }
 
-  return <SignInForm />;
+  return (
+    <div className="container flex items-center justify-center min-h-[calc(100vh-12rem)]">
+      <SignInForm />
+    </div>
+  );
 }
