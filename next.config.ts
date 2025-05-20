@@ -3,17 +3,15 @@ import path from 'path';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  output: 'standalone', // Optimizes for production deployment
-  turbopack: {
-    rules: {
-      // Include the default rules
-      // This ensures compatibility with existing webpack configurations
-      include: ['**/*'],
-    },
-    // Resolve modules using Node.js resolution
-    resolveAlias: {
-      // Add any custom aliases here if needed
-    }
+  typescript: {
+    // During development, you can ignore TypeScript errors
+    // But for production builds, set this to true
+    ignoreBuildErrors: false,
+  },
+  eslint: {
+    // During development, you can ignore ESLint errors
+    // But for production builds, set this to true
+    ignoreDuringBuilds: false,
   },
   webpack: (config, { isServer }) => {
     config.resolve.alias = {
