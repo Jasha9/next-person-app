@@ -42,11 +42,13 @@ export function UserDialogForm({
             name: user.name,
             email: user.email,
             phoneNumber: user.phoneNumber,
+            profilePicture: user.profilePicture,
           }
         : {
             name: '',
             email: '',
             phoneNumber: '',
+            profilePicture: '',
           },
   })
 

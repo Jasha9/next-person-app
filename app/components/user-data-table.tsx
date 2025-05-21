@@ -14,9 +14,10 @@ import {
 } from '@tanstack/react-table'
 import { ArrowUpDown, Edit, Eye, Trash } from 'lucide-react'
 
-import { deleteMultipleUsers, getUsers } from '@/app/actions/actions'
+import { deleteMultipleUsers } from '@/app/actions/actions'
 import DeleteButton from '@/app/components/delete-button'
 import { UserDialogForm } from '@/app/components/user-dialog-form'
+import { useUsers } from '@/app/hooks/use-users'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,7 +32,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,
   TableBody,
@@ -41,27 +41,29 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { toast } from '@/hooks/use-toast'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 
-type User = Awaited<ReturnType<typeof getUsers>>['data'][number]
+type User = Awaited<ReturnType<typeof useUsers>>['data'][number]
+
+interface UserDataTableProps {
+  selectedUserId?: string
+  data: User[]
+  total: number
+  page: number
+  limit: number
+}
 
 export function UserDataTable({
-  searchParams,
-}: {
-  searchParams: Promise<{ userId?: string }>
-}) {
+  selectedUserId,
+  data,
+  total,
+  page,
+  limit,
+}: UserDataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = useState({})
-
-  const [data, setData] = useState<User[]>([])
-  const [total, setTotal] = useState<number>(0)
-  const [page, setPage] = useState(1)
-  const [limit] = useState(10)
-  const [isLoading, setIsLoading] = useState(true)
-
-  const [userId, setUserId] = useState<string | null>(null)
 
   const totalPages = Math.ceil(total / limit)
 
@@ -180,9 +182,6 @@ export function UserDataTable({
                   <Edit className="h-4 w-4" />
                 </Button>
               }
-              onSuccess={() => {
-                fetchData()
-              }}
             />
             <DeleteButton
               userId={user.id}
@@ -202,6 +201,12 @@ export function UserDataTable({
     },
   ]
 
+  const handleChangePage = (newPage: number) => {
+    const url = new URL(window.location.href)
+    url.searchParams.set('page', newPage.toString())
+    window.history.pushState({}, '', url.toString())
+  }
+
   const handleSelect = useCallback((user: User) => {
     // Update URL
     const url = new URL(window.location.href)
@@ -217,7 +222,6 @@ export function UserDataTable({
       await deleteMultipleUsers(
         table.getSelectedRowModel().rows.map((row) => row.original.id)
       )
-      fetchData()
       toast({
         title: 'User Deleted',
         description: `Selected users have been deleted.`,
@@ -232,32 +236,6 @@ export function UserDataTable({
       })
     }
   }
-
-  const fetchData = async () => {
-    setIsLoading(true)
-    try {
-      const res = await getUsers(page, limit)
-      setData(res.data)
-      setTotal(res.total)
-    } catch (error) {
-      console.error('Error fetching users:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, limit])
-
-  useEffect(() => {
-    const fetchUserId = async () => {
-      const params = await searchParams
-      setUserId(params.userId || null)
-    }
-    fetchUserId()
-  }, [searchParams])
 
   const table = useReactTable({
     data,
@@ -346,26 +324,13 @@ export function UserDataTable({
             ))}
           </TableHeader>
           <TableBody>
-            {isLoading ? (
-              <TableRow>
-                {Array.from({ length: columns.length }).map((_, index) => (
-                  <TableCell key={index}>
-                    <div className="flex items-center space-x-2">
-                      <Skeleton className="h-12 w-12 rounded-full" />
-                      <div className="w-1/2 space-y-2">
-                        <Skeleton className="h-4" />
-                        <Skeleton className="h-4" />
-                      </div>
-                    </div>
-                  </TableCell>
-                ))}
-              </TableRow>
-            ) : table.getRowModel().rows?.length ? (
+            {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={
-                    (row.getIsSelected() || row.original.id === userId) &&
+                    (row.getIsSelected() ||
+                      row.original.id === selectedUserId) &&
                     'selected'
                   }
                 >
@@ -401,7 +366,7 @@ export function UserDataTable({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            onClick={() => handleChangePage(page - 1)}
             disabled={page === 1}
           >
             Previous
@@ -412,7 +377,7 @@ export function UserDataTable({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            onClick={() => handleChangePage(page + 1)}
             disabled={page === totalPages}
           >
             Next

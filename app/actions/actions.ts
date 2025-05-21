@@ -31,7 +31,7 @@ export const searchUsers = cache(async (query: string) => {
       orderBy: {
         // Order by relevance
         name: 'asc',
-      },      // Return limited fields to reduce payload size
+      }, // Return limited fields to reduce payload size
       select: {
         id: true,
         name: true,
@@ -69,12 +69,14 @@ export async function addUser(
       return { success: false, error: 'Email already exists' }
     }
 
-    const user = await prisma.user.create({      data: {
+    const user = await prisma.user.create({
+      data: {
         name: validatedUser.name,
         email: validatedUser.email,
         phoneNumber: validatedUser.phoneNumber,
         profilePicture: validatedUser.profilePicture,
-      },select: {
+      },
+      select: {
         id: true,
         name: true,
         email: true,
@@ -82,6 +84,9 @@ export async function addUser(
         profilePicture: true,
       },
     })
+
+    revalidatePath('/')
+    
     return {
       success: true,
       data: {
