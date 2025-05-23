@@ -23,15 +23,7 @@ export const searchUsers = cache(async (query: string) => {
         ],
       },
       take: 10, // Limit results to 10
-<<<<<<< HEAD
       orderBy: { name: 'asc' },
-      // Return limited fields to reduce payload size
-=======
-      orderBy: {
-        // Order by relevance
-        name: 'asc',
-      }, // Return limited fields to reduce payload size
->>>>>>> d9a03011bb34b8887525a2353b1e12ec9ec55b57
       select: {
         id: true,
         name: true,
@@ -39,17 +31,13 @@ export const searchUsers = cache(async (query: string) => {
         phoneNumber: true,
         profilePicture: true,
         hasCompletedOnboarding: true,
+        occupation: true,
+        organization: true,
+        preferredLanguage: true,
       },
     })
 
-    return users.map((user) => ({
-      ...user,
-      name: user.name ?? '',
-      email: user.email ?? '',
-      phoneNumber: user.phoneNumber ?? '',
-      profilePicture: user.profilePicture,
-      hasCompletedOnboarding: user.hasCompletedOnboarding,
-    }))
+    return users as User[]
   } catch (error) {
     console.error('Search error:', error)
     return []
@@ -74,7 +62,6 @@ export async function addUser(
 
     const user = await prisma.user.create({
       data: {
-<<<<<<< HEAD
         name: validatedUser.name ?? null,
         email: validatedUser.email ?? null,
         phoneNumber: validatedUser.phoneNumber ?? null,
@@ -82,12 +69,7 @@ export async function addUser(
         occupation: validatedUser.occupation ?? null,
         organization: validatedUser.organization ?? null,
         preferredLanguage: validatedUser.preferredLanguage ?? null,
-=======
-        name: validatedUser.name,
-        email: validatedUser.email,
-        phoneNumber: validatedUser.phoneNumber,
         profilePicture: validatedUser.profilePicture,
->>>>>>> d9a03011bb34b8887525a2353b1e12ec9ec55b57
       },
       select: {
         id: true,
@@ -103,10 +85,6 @@ export async function addUser(
     })
 
     revalidatePath('/')
-<<<<<<< HEAD
-=======
-    
->>>>>>> d9a03011bb34b8887525a2353b1e12ec9ec55b57
     return {
       success: true,
       data: {
@@ -200,7 +178,7 @@ export async function updateUser(
         occupation: user.occupation ?? '',
         organization: user.organization ?? '',
         preferredLanguage: user.preferredLanguage,
-      }
+      },
     }
   } catch (error) {
     return {

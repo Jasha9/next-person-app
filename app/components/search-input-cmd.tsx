@@ -13,14 +13,7 @@ export default function SearchInput() {
     if (!value) return []
     
     try {
-      const users = await searchUsers(value)
-      // Ensure all required fields are non-null strings
-      return users.map(user => ({
-        id: user.id,
-        name: user.name ?? "",
-        email: user.email ?? "",
-        phoneNumber: user.phoneNumber ?? ""
-      }))
+      return await searchUsers(value)
     } catch (error) {
       toast({
         variant: "destructive",
@@ -48,8 +41,8 @@ export default function SearchInput() {
           onSearch={handleSearch}
           onItemSelect={handleSelect}
           getItemId={(user) => user.id}
-          getItemLabel={(user) => user.name}
-          getItemDescription={(user) => user.email}
+          getItemLabel={(user) => user.name || 'Unnamed User'}
+          getItemDescription={(user) => user.email || 'No email'}
           placeholder="Search users by name, email, or phone..."
           noResultsText="No users found. Try a different search term."
           className="w-full"

@@ -87,7 +87,7 @@ export function UserForm({ form }: FormComponentProps) {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="John Smith" {...field} />
+                <Input placeholder="John Smith" {...field} value={field.value || ''} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -101,7 +101,7 @@ export function UserForm({ form }: FormComponentProps) {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="john.smith@example.com" {...field} />
+                <Input placeholder="john.smith@example.com" type="email" {...field} value={field.value || ''} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -115,11 +115,39 @@ export function UserForm({ form }: FormComponentProps) {
             <FormItem>
               <FormLabel>Phone Number</FormLabel>
               <FormControl>
-                <Input placeholder="0422018632" {...field} />
+                <Input placeholder="0422018632" {...field} value={field.value || ''} />
               </FormControl>
               <FormDescription>
                 Australian mobile number (e.g., 0422018632)
               </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="occupation"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Occupation</FormLabel>
+              <FormControl>
+                <Input placeholder="Software Engineer" {...field} value={field.value || ''} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="organization"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Organization</FormLabel>
+              <FormControl>
+                <Input placeholder="Company Name" {...field} value={field.value || ''} />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}

@@ -1,18 +1,14 @@
 import { redirect } from "next/navigation"
-import { Button } from "@/components/ui/button"
+import { Button } from "../../components/ui/button"
 import Link from "next/link"
 import { SignInButton } from "../components/signin-button"
 import { auth } from "../auth"
 
-type Props = {
-  searchParams?: { callbackUrl?: string }
-}
-
-export default async function LandingPage({ searchParams }: Props) {
+export default async function LandingPage() {
   const session = await auth()
   
   if (session?.user) {
-    return redirect(searchParams?.callbackUrl || "/dashboard")
+    return redirect("/dashboard")
   }
 
   return (
@@ -25,9 +21,7 @@ export default async function LandingPage({ searchParams }: Props) {
           A modern way to manage your contacts
         </p>
         <div className="flex justify-center gap-4">
-          <SignInButton>
-            Sign in with Google
-          </SignInButton>
+          <SignInButton />
           <Button variant="outline" asChild>
             <Link href="/about">Learn more</Link>
           </Button>

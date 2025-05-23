@@ -52,7 +52,7 @@ export const authConfig = {
     error: "/api/auth/error", // Add error page
   },
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user }) {
       try {
         if (!user.email) return false;
         
@@ -78,7 +78,7 @@ export const authConfig = {
         return false;
       }
     },
-    async session({ session, token }) {
+    async session({ session }) {
       try {
         if (session.user) {
           const user = await prisma.user.findUnique({
@@ -120,6 +120,6 @@ export const authConfig = {
       }
 
       return true;
-    },
+    }
   },
 } satisfies NextAuthConfig

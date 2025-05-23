@@ -6,11 +6,12 @@ import ClientOnly from './client-only';
 import { UserSearchWrapper } from './user-search-wrapper';
 
 interface SearchParams {
-  userId?: string | string[] | undefined;
+  userId?: string;
+  page?: string;
 }
 
-export default async function UserSearch({ searchParams }: { searchParams: SearchParams }) {
-  const selectedUserId = typeof searchParams?.userId === 'string' ? searchParams.userId : null;
+export default async function UserSearch({ searchParams = {} }: { searchParams?: SearchParams }) {
+  const selectedUserId = searchParams?.userId;
 
   // Fetch the user based on the selectedUserId
   const user = selectedUserId ? await getUserById(selectedUserId) : null;
