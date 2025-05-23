@@ -68,9 +68,9 @@ export default function UserCard({ user, onDelete, onUpdate }: UserCardProps) {
     <Card className="w-full max-w-md mx-auto">      
       <CardHeader className="flex flex-row items-center gap-4">
         <Avatar className="w-16 h-16">
-          {user.picture ? (
+          {user.profilePicture ? (
             <Image 
-              src={user.picture} 
+              src={user.profilePicture} 
               alt={user.name}
               className="aspect-square h-full w-full object-cover"
               width={64}

@@ -128,14 +128,23 @@ export async function updateUser(
       }
     }
 
+    // Format the data for Prisma update
+    const updateData = {
+      ...(data.name && { name: { set: data.name } }),
+      ...(data.email && { email: { set: data.email } }),
+      ...(data.phoneNumber && { phoneNumber: { set: data.phoneNumber } }),
+      ...(data.picture && { profilePicture: { set: data.picture } })
+    }
+
     const user = await prisma.user.update({
       where: { id },
-      data,
+      data: updateData,
       select: {
         id: true,
         name: true,
         email: true,
         phoneNumber: true,
+        profilePicture: true,
       },
     })
     
@@ -147,6 +156,7 @@ export async function updateUser(
         name: user.name ?? '',
         email: user.email ?? '',
         phoneNumber: user.phoneNumber ?? '',
+        picture: user.profilePicture ?? null,
       }
     }
   } catch (error) {
