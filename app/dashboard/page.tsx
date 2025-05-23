@@ -19,8 +19,13 @@ export default async function DashboardPage({
   searchParams: SearchParams
 }) {
   const session = await auth()
-  const userId = searchParams.userId as string | undefined
-  const page = searchParams.page ? parseInt(searchParams.page) : 1
+
+  const resolvedSearchParams = await searchParams
+
+  const userId = resolvedSearchParams.userId as string | undefined
+  const page = resolvedSearchParams.page
+    ? parseInt(resolvedSearchParams.page)
+    : 1
 
   if (!session?.user) {
     redirect('/')
@@ -29,8 +34,6 @@ export default async function DashboardPage({
   const limit = 10
 
   const { data, total } = await getUsers(page, limit)
-
-  console.log(data)
 
   return (
     <div className="container mx-auto px-4 py-8">
