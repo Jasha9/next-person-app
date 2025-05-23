@@ -9,9 +9,15 @@ interface UserEditDialogProps {
   user: User
 }
 
-export function UserEditDialog({ user }: UserEditDialogProps) {  const handleEditUser = async (data: UserFormData): Promise<ActionState<User>> => {
+export function UserEditDialog({ user }: UserEditDialogProps) {  
+  const handleEditUser = async (data: UserFormData): Promise<ActionState<User>> => {
     try {
-      const result = await updateUser(user.id, data)
+      const formData = {
+        ...data,
+        hasCompletedOnboarding: Boolean(data.hasCompletedOnboarding)
+      }
+      
+      const result = await updateUser(user.id, formData)
       if (!result.success || !result.data) {
         throw new Error(result.error || 'Failed to update user')
       }
@@ -23,7 +29,7 @@ export function UserEditDialog({ user }: UserEditDialogProps) {  const handleEdi
     } catch (error) {
       return {
         success: false,
-        message: 'Failed to update user' + (error instanceof Error ? error.message : String(error)),
+        message: error instanceof Error ? error.message : 'Failed to update user',
       }
     }
   }
@@ -34,13 +40,18 @@ export function UserEditDialog({ user }: UserEditDialogProps) {  const handleEdi
       FormComponent={UserForm}
       action={handleEditUser}
       triggerButtonLabel="Edit"
-      editDialogTitle={`Edit ${user.name}`}
-      dialogDescription={`Update the details of ${user.name} below.`}
+      editDialogTitle={`Edit ${user.name ?? ''}`}
+      dialogDescription={`Update the details of ${user.name ?? ''} below.`}
       submitButtonLabel="Save Changes"
       defaultValues={{
         name: user.name,
         email: user.email,
         phoneNumber: user.phoneNumber,
+        profilePicture: user.profilePicture,
+        hasCompletedOnboarding: Boolean(user.hasCompletedOnboarding),
+        occupation: user.occupation,
+        organization: user.organization,
+        preferredLanguage: user.preferredLanguage
       }}
     />
   )

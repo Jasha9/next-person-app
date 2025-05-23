@@ -35,6 +35,27 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 export type VerificationToken = $Result.DefaultSelection<Prisma.$VerificationTokenPayload>
 
 /**
+ * Enums
+ */
+export namespace $Enums {
+  export const Language: {
+  en: 'en',
+  es: 'es',
+  fr: 'fr',
+  de: 'de',
+  zh: 'zh',
+  ja: 'ja'
+};
+
+export type Language = (typeof Language)[keyof typeof Language]
+
+}
+
+export type Language = $Enums.Language
+
+export const Language: typeof $Enums.Language
+
+/**
  * ##  Prisma Client ʲˢ
  *
  * Type-safe database client for TypeScript & Node.js
@@ -3425,6 +3446,10 @@ export namespace Prisma {
     email: string | null
     phoneNumber: string | null
     profilePicture: string | null
+    hasCompletedOnboarding: boolean | null
+    occupation: string | null
+    organization: string | null
+    preferredLanguage: $Enums.Language | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -3433,6 +3458,10 @@ export namespace Prisma {
     email: string | null
     phoneNumber: string | null
     profilePicture: string | null
+    hasCompletedOnboarding: boolean | null
+    occupation: string | null
+    organization: string | null
+    preferredLanguage: $Enums.Language | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -3441,6 +3470,10 @@ export namespace Prisma {
     email: number
     phoneNumber: number
     profilePicture: number
+    hasCompletedOnboarding: number
+    occupation: number
+    organization: number
+    preferredLanguage: number
     _all: number
   }
 
@@ -3451,6 +3484,10 @@ export namespace Prisma {
     email?: true
     phoneNumber?: true
     profilePicture?: true
+    hasCompletedOnboarding?: true
+    occupation?: true
+    organization?: true
+    preferredLanguage?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -3459,6 +3496,10 @@ export namespace Prisma {
     email?: true
     phoneNumber?: true
     profilePicture?: true
+    hasCompletedOnboarding?: true
+    occupation?: true
+    organization?: true
+    preferredLanguage?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -3467,6 +3508,10 @@ export namespace Prisma {
     email?: true
     phoneNumber?: true
     profilePicture?: true
+    hasCompletedOnboarding?: true
+    occupation?: true
+    organization?: true
+    preferredLanguage?: true
     _all?: true
   }
 
@@ -3548,6 +3593,10 @@ export namespace Prisma {
     email: string | null
     phoneNumber: string | null
     profilePicture: string | null
+    hasCompletedOnboarding: boolean
+    occupation: string | null
+    organization: string | null
+    preferredLanguage: $Enums.Language | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -3573,6 +3622,10 @@ export namespace Prisma {
     email?: boolean
     phoneNumber?: boolean
     profilePicture?: boolean
+    hasCompletedOnboarding?: boolean
+    occupation?: boolean
+    organization?: boolean
+    preferredLanguage?: boolean
     accounts?: boolean | User$accountsArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -3584,6 +3637,10 @@ export namespace Prisma {
     email?: boolean
     phoneNumber?: boolean
     profilePicture?: boolean
+    hasCompletedOnboarding?: boolean
+    occupation?: boolean
+    organization?: boolean
+    preferredLanguage?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3592,6 +3649,10 @@ export namespace Prisma {
     email?: boolean
     phoneNumber?: boolean
     profilePicture?: boolean
+    hasCompletedOnboarding?: boolean
+    occupation?: boolean
+    organization?: boolean
+    preferredLanguage?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -3600,9 +3661,13 @@ export namespace Prisma {
     email?: boolean
     phoneNumber?: boolean
     profilePicture?: boolean
+    hasCompletedOnboarding?: boolean
+    occupation?: boolean
+    organization?: boolean
+    preferredLanguage?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "phoneNumber" | "profilePicture", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "phoneNumber" | "profilePicture" | "hasCompletedOnboarding" | "occupation" | "organization" | "preferredLanguage", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
@@ -3623,6 +3688,10 @@ export namespace Prisma {
       email: string | null
       phoneNumber: string | null
       profilePicture: string | null
+      hasCompletedOnboarding: boolean
+      occupation: string | null
+      organization: string | null
+      preferredLanguage: $Enums.Language | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -4053,6 +4122,10 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly phoneNumber: FieldRef<"User", 'String'>
     readonly profilePicture: FieldRef<"User", 'String'>
+    readonly hasCompletedOnboarding: FieldRef<"User", 'Boolean'>
+    readonly occupation: FieldRef<"User", 'String'>
+    readonly organization: FieldRef<"User", 'String'>
+    readonly preferredLanguage: FieldRef<"User", 'Language'>
   }
     
 
@@ -5523,7 +5596,11 @@ export namespace Prisma {
     name: 'name',
     email: 'email',
     phoneNumber: 'phoneNumber',
-    profilePicture: 'profilePicture'
+    profilePicture: 'profilePicture',
+    hasCompletedOnboarding: 'hasCompletedOnboarding',
+    occupation: 'occupation',
+    organization: 'organization',
+    preferredLanguage: 'preferredLanguage'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -5606,6 +5683,27 @@ export namespace Prisma {
    * Reference to a field of type 'DateTime[]'
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'Language'
+   */
+  export type EnumLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Language'>
+    
+
+
+  /**
+   * Reference to a field of type 'Language[]'
+   */
+  export type ListEnumLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Language[]'>
     
 
 
@@ -5778,6 +5876,10 @@ export namespace Prisma {
     email?: StringNullableFilter<"User"> | string | null
     phoneNumber?: StringNullableFilter<"User"> | string | null
     profilePicture?: StringNullableFilter<"User"> | string | null
+    hasCompletedOnboarding?: BoolFilter<"User"> | boolean
+    occupation?: StringNullableFilter<"User"> | string | null
+    organization?: StringNullableFilter<"User"> | string | null
+    preferredLanguage?: EnumLanguageNullableFilter<"User"> | $Enums.Language | null
     accounts?: AccountListRelationFilter
     sessions?: SessionListRelationFilter
   }
@@ -5788,6 +5890,10 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     phoneNumber?: SortOrderInput | SortOrder
     profilePicture?: SortOrderInput | SortOrder
+    hasCompletedOnboarding?: SortOrder
+    occupation?: SortOrderInput | SortOrder
+    organization?: SortOrderInput | SortOrder
+    preferredLanguage?: SortOrderInput | SortOrder
     accounts?: AccountOrderByRelationAggregateInput
     sessions?: SessionOrderByRelationAggregateInput
   }
@@ -5801,6 +5907,10 @@ export namespace Prisma {
     name?: StringNullableFilter<"User"> | string | null
     phoneNumber?: StringNullableFilter<"User"> | string | null
     profilePicture?: StringNullableFilter<"User"> | string | null
+    hasCompletedOnboarding?: BoolFilter<"User"> | boolean
+    occupation?: StringNullableFilter<"User"> | string | null
+    organization?: StringNullableFilter<"User"> | string | null
+    preferredLanguage?: EnumLanguageNullableFilter<"User"> | $Enums.Language | null
     accounts?: AccountListRelationFilter
     sessions?: SessionListRelationFilter
   }, "id" | "email">
@@ -5811,6 +5921,10 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     phoneNumber?: SortOrderInput | SortOrder
     profilePicture?: SortOrderInput | SortOrder
+    hasCompletedOnboarding?: SortOrder
+    occupation?: SortOrderInput | SortOrder
+    organization?: SortOrderInput | SortOrder
+    preferredLanguage?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -5825,6 +5939,10 @@ export namespace Prisma {
     email?: StringNullableWithAggregatesFilter<"User"> | string | null
     phoneNumber?: StringNullableWithAggregatesFilter<"User"> | string | null
     profilePicture?: StringNullableWithAggregatesFilter<"User"> | string | null
+    hasCompletedOnboarding?: BoolWithAggregatesFilter<"User"> | boolean
+    occupation?: StringNullableWithAggregatesFilter<"User"> | string | null
+    organization?: StringNullableWithAggregatesFilter<"User"> | string | null
+    preferredLanguage?: EnumLanguageNullableWithAggregatesFilter<"User"> | $Enums.Language | null
   }
 
   export type VerificationTokenWhereInput = {
@@ -6028,6 +6146,10 @@ export namespace Prisma {
     email?: string | null
     phoneNumber?: string | null
     profilePicture?: string | null
+    hasCompletedOnboarding?: boolean
+    occupation?: string | null
+    organization?: string | null
+    preferredLanguage?: $Enums.Language | null
     accounts?: AccountCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
   }
@@ -6038,6 +6160,10 @@ export namespace Prisma {
     email?: string | null
     phoneNumber?: string | null
     profilePicture?: string | null
+    hasCompletedOnboarding?: boolean
+    occupation?: string | null
+    organization?: string | null
+    preferredLanguage?: $Enums.Language | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
   }
@@ -6048,6 +6174,10 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
+    hasCompletedOnboarding?: BoolFieldUpdateOperationsInput | boolean
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    organization?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredLanguage?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
     accounts?: AccountUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
   }
@@ -6058,6 +6188,10 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
+    hasCompletedOnboarding?: BoolFieldUpdateOperationsInput | boolean
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    organization?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredLanguage?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -6068,6 +6202,10 @@ export namespace Prisma {
     email?: string | null
     phoneNumber?: string | null
     profilePicture?: string | null
+    hasCompletedOnboarding?: boolean
+    occupation?: string | null
+    organization?: string | null
+    preferredLanguage?: $Enums.Language | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -6076,6 +6214,10 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
+    hasCompletedOnboarding?: BoolFieldUpdateOperationsInput | boolean
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    organization?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredLanguage?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -6084,6 +6226,10 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
+    hasCompletedOnboarding?: BoolFieldUpdateOperationsInput | boolean
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    organization?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredLanguage?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
   }
 
   export type VerificationTokenCreateInput = {
@@ -6335,6 +6481,18 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type EnumLanguageNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.Language | EnumLanguageFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLanguageNullableFilter<$PrismaModel> | $Enums.Language | null
+  }
+
   export type AccountListRelationFilter = {
     every?: AccountWhereInput
     some?: AccountWhereInput
@@ -6361,6 +6519,10 @@ export namespace Prisma {
     email?: SortOrder
     phoneNumber?: SortOrder
     profilePicture?: SortOrder
+    hasCompletedOnboarding?: SortOrder
+    occupation?: SortOrder
+    organization?: SortOrder
+    preferredLanguage?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -6369,6 +6531,10 @@ export namespace Prisma {
     email?: SortOrder
     phoneNumber?: SortOrder
     profilePicture?: SortOrder
+    hasCompletedOnboarding?: SortOrder
+    occupation?: SortOrder
+    organization?: SortOrder
+    preferredLanguage?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -6377,6 +6543,28 @@ export namespace Prisma {
     email?: SortOrder
     phoneNumber?: SortOrder
     profilePicture?: SortOrder
+    hasCompletedOnboarding?: SortOrder
+    occupation?: SortOrder
+    organization?: SortOrder
+    preferredLanguage?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type EnumLanguageNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Language | EnumLanguageFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLanguageNullableWithAggregatesFilter<$PrismaModel> | $Enums.Language | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumLanguageNullableFilter<$PrismaModel>
+    _max?: NestedEnumLanguageNullableFilter<$PrismaModel>
   }
 
   export type VerificationTokenIdentifierTokenCompoundUniqueInput = {
@@ -6476,6 +6664,14 @@ export namespace Prisma {
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
     createMany?: SessionCreateManyUserInputEnvelope
     connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type NullableEnumLanguageFieldUpdateOperationsInput = {
+    set?: $Enums.Language | null
   }
 
   export type AccountUpdateManyWithoutUserNestedInput = {
@@ -6670,12 +6866,46 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedEnumLanguageNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.Language | EnumLanguageFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLanguageNullableFilter<$PrismaModel> | $Enums.Language | null
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedEnumLanguageNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Language | EnumLanguageFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLanguageNullableWithAggregatesFilter<$PrismaModel> | $Enums.Language | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumLanguageNullableFilter<$PrismaModel>
+    _max?: NestedEnumLanguageNullableFilter<$PrismaModel>
+  }
+
   export type UserCreateWithoutAccountsInput = {
     id?: string
     name?: string | null
     email?: string | null
     phoneNumber?: string | null
     profilePicture?: string | null
+    hasCompletedOnboarding?: boolean
+    occupation?: string | null
+    organization?: string | null
+    preferredLanguage?: $Enums.Language | null
     sessions?: SessionCreateNestedManyWithoutUserInput
   }
 
@@ -6685,6 +6915,10 @@ export namespace Prisma {
     email?: string | null
     phoneNumber?: string | null
     profilePicture?: string | null
+    hasCompletedOnboarding?: boolean
+    occupation?: string | null
+    organization?: string | null
+    preferredLanguage?: $Enums.Language | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -6710,6 +6944,10 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
+    hasCompletedOnboarding?: BoolFieldUpdateOperationsInput | boolean
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    organization?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredLanguage?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
   }
 
@@ -6719,6 +6957,10 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
+    hasCompletedOnboarding?: BoolFieldUpdateOperationsInput | boolean
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    organization?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredLanguage?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -6728,6 +6970,10 @@ export namespace Prisma {
     email?: string | null
     phoneNumber?: string | null
     profilePicture?: string | null
+    hasCompletedOnboarding?: boolean
+    occupation?: string | null
+    organization?: string | null
+    preferredLanguage?: $Enums.Language | null
     accounts?: AccountCreateNestedManyWithoutUserInput
   }
 
@@ -6737,6 +6983,10 @@ export namespace Prisma {
     email?: string | null
     phoneNumber?: string | null
     profilePicture?: string | null
+    hasCompletedOnboarding?: boolean
+    occupation?: string | null
+    organization?: string | null
+    preferredLanguage?: $Enums.Language | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -6762,6 +7012,10 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
+    hasCompletedOnboarding?: BoolFieldUpdateOperationsInput | boolean
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    organization?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredLanguage?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
     accounts?: AccountUpdateManyWithoutUserNestedInput
   }
 
@@ -6771,6 +7025,10 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
+    hasCompletedOnboarding?: BoolFieldUpdateOperationsInput | boolean
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    organization?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredLanguage?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
   }
 

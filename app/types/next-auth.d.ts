@@ -1,18 +1,32 @@
 import "next-auth"
+import { Language } from '@prisma/client'
 
 declare module "next-auth" {
   interface Session {
     user: {
-      id?: string
-      name?: string | null
-      email?: string | null
+      id: string
+      name: string | null
+      email: string | null
+      phoneNumber: string | null
+      profilePicture: string | null
+      hasCompletedOnboarding: boolean
+      occupation: string | null
+      organization: string | null
+      preferredLanguage: Language | null
     }
   }
+}
 
-  interface User {
+declare module "next-auth/jwt" {
+  interface JWT {
     id: string
-    name?: string | null
-    email?: string | null
-    phoneNumber?: string | null
+    name: string | null
+    email: string | null
+    phoneNumber: string | null
+    profilePicture: string | null
+    hasCompletedOnboarding: boolean
+    occupation: string | null
+    organization: string | null
+    preferredLanguage: Language | null
   }
 }
