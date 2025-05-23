@@ -15,7 +15,7 @@ export const userFormSchema = z.object({
   hasCompletedOnboarding: z.boolean(),
   occupation: z.string().nullable(),
   organization: z.string().nullable(),
-  preferredLanguage: languageEnum.nullable(),
+  preferredLanguage: languageEnum.nullable()
 }).required({
   hasCompletedOnboarding: true
 })
