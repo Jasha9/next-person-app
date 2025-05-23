@@ -6,15 +6,15 @@ import GoogleProvider from "next-auth/providers/google"
  */
 export const publicRoutes = [
   "/",
+  "/landing",
   "/about",
-  "/api/people"
 ]
 
 /**
  * Routes that are used for authentication
  */
 export const authRoutes = [
-  "/auth/signin",
+  "/landing"
 ]
 
 /**
@@ -25,7 +25,7 @@ export const apiAuthPrefix = "/api/auth"
 /**
  * The default redirect path after logging in
  */
-export const DEFAULT_LOGIN_REDIRECT = "/"
+export const DEFAULT_LOGIN_REDIRECT = "/dashboard"
 
 export const authConfig = {
   providers: [
@@ -35,7 +35,7 @@ export const authConfig = {
     })
   ],
   pages: {
-    signIn: "/auth/signin",
+    signIn: "/landing",
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -49,29 +49,45 @@ export const authConfig = {
     },
     async session({ session, token }) {
       if (session.user) {
-        // Add token data to session        session.user.id = token.id as string
+        // Add token data to session
+        session.user.id = token.id as string
         session.user.name = (token.name as string) ?? ''
         session.user.email = (token.email as string) ?? ''
       }
       return session
     },
     authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user
-      const isOnPublicRoute = publicRoutes.includes(nextUrl.pathname)
-      const isOnAuthRoute = authRoutes.includes(nextUrl.pathname)
-      const isOnApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
+      const isLoggedIn = !!auth?.user;
+      const isOnPublicRoute = publicRoutes.includes(nextUrl.pathname);
+      const isOnAuthRoute = authRoutes.includes(nextUrl.pathname);
+      const isOnApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
 
-      if (isOnApiAuthRoute) return true
+      if (isOnApiAuthRoute) return true;
+      
       if (isOnAuthRoute) {
-        if (isLoggedIn) return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
-        return true
+        if (isLoggedIn) {
+          return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+        }
+        return true;
       }
-      if (isOnPublicRoute) return true
-      return isLoggedIn
-    },
+
+      if (isOnPublicRoute) return true;
+
+      if (!isLoggedIn) {
+        let callbackUrl = nextUrl.pathname;
+        if (nextUrl.search) {
+          callbackUrl += nextUrl.search;
+        }
+        const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+        return Response.redirect(new URL(`/landing?callbackUrl=${encodedCallbackUrl}`, nextUrl));
+      }
+
+      return true;
+    }
   },
   session: {
     strategy: "jwt",
   },
+  trustHost: true,
   secret: process.env.NEXTAUTH_SECRET,
 } satisfies NextAuthConfig
