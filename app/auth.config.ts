@@ -33,11 +33,15 @@ export const authConfig = {
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     })
-  ],
+  ],  debug: process.env.NODE_ENV === 'development',
   pages: {
-    signIn: "/landing",
+    signIn: "/auth/signin",
+    error: "/auth/signin",
   },
   callbacks: {
+    async signIn({ user, account, profile }) {
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         // Add user data to token
@@ -45,7 +49,7 @@ export const authConfig = {
         token.name = user.name
         token.email = user.email
       }
-      return token
+      return token;
     },
     async session({ session, token }) {
       if (session.user) {
