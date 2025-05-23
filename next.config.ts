@@ -1,8 +1,10 @@
-import type { NextConfig } from "next";
-import path from 'path';
+import { withPayload } from '@payloadcms/next/withPayload'
+import type { NextConfig } from 'next'
+import path from 'path'
 
 const nextConfig: NextConfig = {
-  reactStrictMode: true,  typescript: {
+  reactStrictMode: true,
+  typescript: {
     // TODO: Fix type issues and re-enable type checking
     ignoreBuildErrors: true,
   },
@@ -15,11 +17,10 @@ const nextConfig: NextConfig = {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': path.resolve(__dirname),
-    };
-    return config;
+    }
+    return config
   },
   pageExtensions: ['ts', 'tsx', 'js', 'jsx'],
-};
+}
 
-export default nextConfig;
-
+export default withPayload(nextConfig)
