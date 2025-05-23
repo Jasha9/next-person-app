@@ -8,10 +8,10 @@ const nextConfig: NextConfig = {
     domains: ['lh3.googleusercontent.com'], // Allow Google profile images
   },
   typescript: {
-    ignoreBuildErrors: true, // Temporarily set to true to debug auth issues
+    ignoreBuildErrors: false, // Enable type checking
   },
   eslint: {
-    ignoreDuringBuilds: true, // Temporarily set to true to debug auth issues
+    ignoreDuringBuilds: false, // Enable linting
   },
   logging: {
     fetches: {
