@@ -35,6 +35,30 @@ The upgrade to Next.js 15.1 introduced significant breaking changes, including a
 
 The application has been tested with **Node.js 20.17.0**. Features such as ECMAScript modules and async server components require Node.js 20 or newer, making this the minimum requirement.
 
+## Environment Variables
+
+The following environment variables are required for deployment:
+
+### Database Configuration
+- `DATABASE_URL`: Your PostgreSQL database connection URL
+  - Format: `postgresql://USER:PASSWORD@HOST:PORT/DATABASE`
+  - For Vercel, use the internal connection string from your database settings
+
+### Authentication (NextAuth.js)
+- `NEXTAUTH_URL`: Your application's URL (e.g., https://your-app.vercel.app)
+- `NEXTAUTH_SECRET`: A random string used to hash tokens (generate with `openssl rand -base64 32`)
+- `GOOGLE_CLIENT_ID`: Your Google OAuth client ID
+- `GOOGLE_CLIENT_SECRET`: Your Google OAuth client secret
+
+### Example .env file
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/person_search"
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-secret-key"
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+```
+
 ## Getting Started
 
 ### Prerequisites
@@ -155,7 +179,7 @@ The `MutableDialog` component is a reusable dialog framework that can be used fo
 - **`action`**: A function to handle the form submission (e.g., adding or updating a user).
 - **`defaultValues`**: Initial values for the form fields, used for editing existing data.
 - **`triggerButtonLabel`**: Label for the button that triggers the dialog.
-- **`addDialogTitle`** / **`editDialogTitle`**: Titles for the "Add" and "Edit" modes.
+- **`addDialogTitle` / `editDialogTitle`**: Titles for the "Add" and "Edit" modes.
 - **`dialogDescription`**: Description displayed inside the dialog.
 - **`submitButtonLabel`**: Label for the submit button.
 
@@ -252,79 +276,6 @@ The `MutableDialog` component currently uses a custom `ActionState` type to hand
 - Refactor error handling and success notifications to leverage React's server-side error handling.
 
 This will be addressed in a future update to ensure the `MutableDialog` component remains aligned with React 19's capabilities.
-
-## Deployment
-
-### Prerequisites
-
-1. A [Vercel](https://vercel.com) account
-2. A PostgreSQL database (we recommend using [Neon](https://neon.tech))
-3. Google OAuth credentials from [Google Cloud Console](https://console.cloud.google.com)
-
-### Environment Variables
-
-The following environment variables need to be set in your Vercel project:
-
-```bash
-DATABASE_URL=your_postgresql_database_url
-NEXTAUTH_URL=your_vercel_deployment_url
-NEXTAUTH_SECRET=your_generated_secret
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-```
-
-### Deployment Steps
-
-1. Push your code to GitHub
-2. Connect your repository to Vercel
-3. Configure the environment variables in Vercel's dashboard
-4. Deploy the project
-5. After deployment, run database migrations:
-   ```bash
-   npx prisma db push
-   ```
-
-### Google OAuth Setup
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com)
-2. Create a new project or select an existing one
-3. Enable the Google+ API
-4. Create OAuth 2.0 credentials
-5. Add your Vercel deployment URL to the authorized domains
-6. Add these authorized redirect URIs:
-   ```
-   https://your-app.vercel.app/api/auth/callback/google
-   ```
-
-## Local Development
-
-### Prerequisites
-
-- Node.js 20.17.0 or newer
-- npm
-
-### Installation
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/gocallum/person-search.git
-   cd person-search
-   ```
-
-2. Install dependencies:
-
-   ```bash
-   npm install
-   ```
-
-3. Create a `.env.local` file in the root directory and add any necessary environment variables.
-
-### Running the Development Server
-
-```bash
-npm run dev
-```
 
 ## Contributing
 
