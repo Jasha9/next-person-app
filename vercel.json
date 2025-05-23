@@ -3,9 +3,11 @@
     "buildCommand": "prisma generate && next build",
     "installCommand": "npm install",
     "framework": "nextjs",
-    "outputDirectory": ".next",
-    "env": {
-        "NEXTAUTH_URL": "https://next-person-app-git-dev-jashandeep-kaurs-projects.vercel.app"
+    "git": {
+        "deploymentEnabled": {
+            "main": true,
+            "dev": true
+        }
     }
 }
 
