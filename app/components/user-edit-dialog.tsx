@@ -9,9 +9,13 @@ interface UserEditDialogProps {
   user: User
 }
 
-export function UserEditDialog({ user }: UserEditDialogProps) {  const handleEditUser = async (data: UserFormData): Promise<ActionState<User>> => {
+export function UserEditDialog({ user }: UserEditDialogProps) {  
+  const handleEditUser = async (data: UserFormData): Promise<ActionState<User>> => {
     try {
-      const result = await updateUser(user.id, data)
+      const result = await updateUser(user.id, {
+        ...data,
+        hasCompletedOnboarding: data.hasCompletedOnboarding ?? false
+      })
       if (!result.success || !result.data) {
         throw new Error(result.error || 'Failed to update user')
       }
@@ -41,6 +45,11 @@ export function UserEditDialog({ user }: UserEditDialogProps) {  const handleEdi
         name: user.name,
         email: user.email,
         phoneNumber: user.phoneNumber,
+        profilePicture: user.profilePicture,
+        hasCompletedOnboarding: user.hasCompletedOnboarding,
+        occupation: user.occupation,
+        organization: user.organization,
+        preferredLanguage: user.preferredLanguage
       }}
     />
   )

@@ -1,5 +1,6 @@
 import type { NextAuthConfig } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
+import { prisma } from "@/lib/prisma"
 
 /**
  * Routes that are public and don't require authentication
@@ -8,13 +9,17 @@ export const publicRoutes = [
   "/",
   "/landing",
   "/about",
+  "/api/auth/error", // Add error route
 ]
 
 /**
  * Routes that are used for authentication
  */
 export const authRoutes = [
-  "/landing"
+  "/landing",
+  "/sign-in",
+  "/api/auth/signin",
+  "/api/auth/callback/google"
 ]
 
 /**
@@ -28,39 +33,70 @@ export const apiAuthPrefix = "/api/auth"
 export const DEFAULT_LOGIN_REDIRECT = "/dashboard"
 
 export const authConfig = {
+  debug: true, // Enable debug mode temporarily
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          prompt: "select_account",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
     })
-  ],  debug: process.env.NODE_ENV === 'development',
+  ],
   pages: {
-    signIn: "/auth/signin",
-    error: "/auth/signin",
+    signIn: "/landing",
+    error: "/api/auth/error", // Add error page
   },
   callbacks: {
     async signIn({ user, account, profile }) {
-      return true;
-    },
-    async jwt({ token, user }) {
-      if (user) {
-        // Add user data to token
-        token.id = user.id
-        token.name = user.name
-        token.email = user.email
+      try {
+        if (!user.email) return false;
+        
+        // Check if user exists
+        const existingUser = await prisma.user.findUnique({
+          where: { email: user.email },
+        });
+
+        if (!existingUser) {
+          // Create new user
+          await prisma.user.create({
+            data: {
+              email: user.email,
+              name: user.name ?? null,
+              profilePicture: user.image ?? null,
+            },
+          });
+        }
+        
+        return true;
+      } catch (error) {
+        console.error("Sign in error:", error);
+        return false;
       }
-      return token;
     },
     async session({ session, token }) {
-      if (session.user) {
-        // Add token data to session
-        session.user.id = token.id as string
-        session.user.name = (token.name as string) ?? ''
-        session.user.email = (token.email as string) ?? ''
+      try {
+        if (session.user) {
+          const user = await prisma.user.findUnique({
+            where: { email: session.user.email ?? undefined },
+          });
+          
+          if (user) {
+            session.user.id = user.id;
+            session.user.name = user.name ?? null;
+          }
+        }
+        return session;
+      } catch (error) {
+        console.error("Session error:", error);
+        return session;
       }
-      return session
     },
-    authorized({ auth, request: { nextUrl } }) {
+    async authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const isOnPublicRoute = publicRoutes.includes(nextUrl.pathname);
       const isOnAuthRoute = authRoutes.includes(nextUrl.pathname);
@@ -78,20 +114,12 @@ export const authConfig = {
       if (isOnPublicRoute) return true;
 
       if (!isLoggedIn) {
-        let callbackUrl = nextUrl.pathname;
-        if (nextUrl.search) {
-          callbackUrl += nextUrl.search;
-        }
+        const callbackUrl = nextUrl.pathname + nextUrl.search;
         const encodedCallbackUrl = encodeURIComponent(callbackUrl);
         return Response.redirect(new URL(`/landing?callbackUrl=${encodedCallbackUrl}`, nextUrl));
       }
 
       return true;
-    }
+    },
   },
-  session: {
-    strategy: "jwt",
-  },
-  trustHost: true,
-  secret: process.env.NEXTAUTH_SECRET,
 } satisfies NextAuthConfig

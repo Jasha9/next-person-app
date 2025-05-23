@@ -8,20 +8,27 @@ import UserActions from './user-actions'
 
 export default function SearchInput() {
   const [selectedUser, setSelectedUser] = React.useState<User | null>(null)
-  
+
   const handleSearch = React.useCallback(async (value: string) => {
     if (!value?.trim()) {
       return []
     }
     
-    try {      const users = await searchUsers(value);
-      if (!users) return [];
+    try {
+      const users = await searchUsers(value)
+      if (!users || !Array.isArray(users)) {
+        console.error('Invalid response format:', users)
+        return []
+      }
+      
       return users.map(user => ({
-        id: user.id,
-        name: user.name || "",
-        email: user.email || "",
-        phoneNumber: user.phoneNumber || ""
-      }) as User)
+        ...user,
+        name: user.name ?? "",
+        email: user.email ?? "",
+        phoneNumber: user.phoneNumber ?? "",
+        profilePicture: user.profilePicture ?? null,
+        hasCompletedOnboarding: user.hasCompletedOnboarding
+      })) as User[]
     } catch (error) {
       console.error('Error searching users:', error)
       return []
@@ -42,7 +49,7 @@ export default function SearchInput() {
         onSearch={handleSearch}
         onItemSelect={handleSelect}
         getItemId={(user) => user.id}
-        getItemLabel={(user) => user.name}
+        getItemLabel={(user) => user.name ?? ""}
         placeholder="Search users..."
         noResultsText="No users found."
       />

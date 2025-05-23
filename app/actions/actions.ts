@@ -10,14 +10,9 @@ import { User, userSchema } from './schemas'
 export const searchUsers = cache(async (query: string) => {
   try {
     // Handle empty query case
-    if (!query) {
-      return []
-    }
-
+    if (!query) return []
     // Ensure prisma client is initialized
-    if (!prisma) {
-      throw new Error('Database client not initialized')
-    }
+    if (!prisma) throw new Error('Database client not initialized')
 
     const users = await prisma.user.findMany({
       where: {
@@ -28,24 +23,25 @@ export const searchUsers = cache(async (query: string) => {
         ],
       },
       take: 10, // Limit results to 10
-      orderBy: {
-        // Order by relevance
-        name: 'asc',
-      },      // Return limited fields to reduce payload size
+      orderBy: { name: 'asc' },
+      // Return limited fields to reduce payload size
       select: {
         id: true,
         name: true,
         email: true,
         phoneNumber: true,
         profilePicture: true,
+        hasCompletedOnboarding: true,
       },
     })
+
     return users.map((user) => ({
       ...user,
       name: user.name ?? '',
       email: user.email ?? '',
       phoneNumber: user.phoneNumber ?? '',
-      profilePicture: user.profilePicture ?? null,
+      profilePicture: user.profilePicture,
+      hasCompletedOnboarding: user.hasCompletedOnboarding,
     }))
   } catch (error) {
     console.error('Search error:', error)
@@ -62,26 +58,37 @@ export async function addUser(
 
     // Check if email already exists
     const existingUser = await prisma.user.findUnique({
-      where: { email: validatedUser.email },
+      where: { email: validatedUser.email ?? undefined },
     })
 
     if (existingUser) {
       return { success: false, error: 'Email already exists' }
     }
 
-    const user = await prisma.user.create({      data: {
-        name: validatedUser.name,
-        email: validatedUser.email,
-        phoneNumber: validatedUser.phoneNumber,
-        profilePicture: validatedUser.profilePicture,
-      },select: {
+    const user = await prisma.user.create({
+      data: {
+        name: validatedUser.name ?? null,
+        email: validatedUser.email ?? null,
+        phoneNumber: validatedUser.phoneNumber ?? null,
+        hasCompletedOnboarding: validatedUser.hasCompletedOnboarding,
+        occupation: validatedUser.occupation ?? null,
+        organization: validatedUser.organization ?? null,
+        preferredLanguage: validatedUser.preferredLanguage ?? null,
+      },
+      select: {
         id: true,
         name: true,
         email: true,
         phoneNumber: true,
         profilePicture: true,
+        hasCompletedOnboarding: true,
+        occupation: true,
+        organization: true,
+        preferredLanguage: true,
       },
     })
+
+    revalidatePath('/')
     return {
       success: true,
       data: {
@@ -89,7 +96,11 @@ export async function addUser(
         name: user.name ?? '',
         email: user.email ?? '',
         phoneNumber: user.phoneNumber ?? '',
-        profilePicture: user.profilePicture ?? null,
+        profilePicture: user.profilePicture,
+        hasCompletedOnboarding: user.hasCompletedOnboarding,
+        occupation: user.occupation ?? '',
+        organization: user.organization ?? '',
+        preferredLanguage: user.preferredLanguage,
       },
     }
   } catch (error) {
@@ -133,25 +144,28 @@ export async function updateUser(
       }
     }
 
-    // Format the data for Prisma update
-    const updateData = {
-      ...(data.name && { name: { set: data.name } }),
-      ...(data.email && { email: { set: data.email } }),
-      ...(data.phoneNumber && { phoneNumber: { set: data.phoneNumber } }),
-      ...(data.profilePicture && {
-        profilePicture: { set: data.profilePicture },
-      }),
-    }
-
     const user = await prisma.user.update({
       where: { id },
-      data: updateData,
+      data: {
+        ...(data.name !== undefined && { name: data.name }),
+        ...(data.email !== undefined && { email: data.email }),
+        ...(data.phoneNumber !== undefined && { phoneNumber: data.phoneNumber }),
+        ...(data.profilePicture !== undefined && { profilePicture: data.profilePicture }),
+        ...(data.hasCompletedOnboarding !== undefined && { hasCompletedOnboarding: data.hasCompletedOnboarding }),
+        ...(data.occupation !== undefined && { occupation: data.occupation }),
+        ...(data.organization !== undefined && { organization: data.organization }),
+        ...(data.preferredLanguage !== undefined && { preferredLanguage: data.preferredLanguage }),
+      },
       select: {
         id: true,
         name: true,
         email: true,
         phoneNumber: true,
         profilePicture: true,
+        hasCompletedOnboarding: true,
+        occupation: true,
+        organization: true,
+        preferredLanguage: true,
       },
     })
 
@@ -163,8 +177,12 @@ export async function updateUser(
         name: user.name ?? '',
         email: user.email ?? '',
         phoneNumber: user.phoneNumber ?? '',
-        profilePicture: user.profilePicture ?? null,
-      },
+        profilePicture: user.profilePicture,
+        hasCompletedOnboarding: user.hasCompletedOnboarding,
+        occupation: user.occupation ?? '',
+        organization: user.organization ?? '',
+        preferredLanguage: user.preferredLanguage,
+      }
     }
   } catch (error) {
     return {
@@ -183,8 +201,13 @@ export const getUserById = cache(async (id: string) => {
       email: true,
       phoneNumber: true,
       profilePicture: true,
+      hasCompletedOnboarding: true,
+      occupation: true,
+      organization: true,
+      preferredLanguage: true,
     },
   })
+  
   if (!user) return null
 
   return {
@@ -192,7 +215,11 @@ export const getUserById = cache(async (id: string) => {
     name: user.name ?? '',
     email: user.email ?? '',
     phoneNumber: user.phoneNumber ?? '',
-    profilePicture: user.profilePicture ?? null,
+    profilePicture: user.profilePicture,
+    hasCompletedOnboarding: user.hasCompletedOnboarding,
+    occupation: user.occupation ?? '',
+    organization: user.organization ?? '',
+    preferredLanguage: user.preferredLanguage,
   }
 })
 
@@ -202,12 +229,33 @@ export const getUsers = cache(async (page: number, limit: number) => {
       skip: (page - 1) * limit,
       take: limit,
       orderBy: { name: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phoneNumber: true,
+        profilePicture: true,
+        hasCompletedOnboarding: true,
+        occupation: true,
+        organization: true,
+        preferredLanguage: true,
+      },
     })
 
     const totalUsers = await prisma.user.count()
 
     return {
-      data: users,
+      data: users.map(user => ({
+        ...user,
+        name: user.name ?? '',
+        email: user.email ?? '',
+        phoneNumber: user.phoneNumber ?? '',
+        profilePicture: user.profilePicture,
+        hasCompletedOnboarding: user.hasCompletedOnboarding,
+        occupation: user.occupation ?? '',
+        organization: user.organization ?? '',
+        preferredLanguage: user.preferredLanguage,
+      })),
       total: totalUsers,
     }
   } catch (error) {
